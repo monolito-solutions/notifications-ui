@@ -1,51 +1,57 @@
 const express = require('express');
-const { Client, ConsumerType } = require('pulsar-client');
-
+const Pulsar = require('pulsar-client');
 const app = express();
 const port = 3000;
 
-app.use(express.static('public'));
 
-const client = new Client({
-    serviceUrl: 'http://localhost:8080',
-});
+module.exports = (() => {
+    let server;
 
-const consumer = client.subscribe({
-    topic: 'orders',
-    subscription: 'order_notifications',
-    subscriptionType: ConsumerType.Shared,
-});
+    return {
+        create: async () => {
+            app.use(express.static('public'));
 
-app.get('/notifications', (req, res) => {
-    const notifications = [];
-
-    consumer.seek({
-        messageId: {
-            ledgerId: -1,
-            entryId: -1,
-            batchIndex: -1,
-        },
+    // Create a client
+    const client = new Pulsar.Client({
+        serviceUrl: 'pulsar://localhost:6650',
     });
 
-    consumer.receive({
-        maxMessages: 100,
-        timeout: 1000,
-    })
-        .then((messages) => {
-            messages.forEach((msg) => {
-                const data = JSON.parse(msg.getData().toString());
-                notifications.push(data);
-                consumer.acknowledge(msg);
+    // Create a consumer
+    const consumer = await client.subscribe({
+        topic: 'orders',
+        subscription: 'order_notifications',
+        subscriptionType: 'shared'
+    });
+
+            app.get('/notifications', (req, res) => {
+                const notifications = [];
+
+                consumer.receive()
+                    .then((messages) => {
+                        console.log(messages);
+                        messages.forEach((msg) => {
+                            const data = JSON.parse(msg.getData().toString());
+                            notifications.push(data);
+                            consumer.acknowledge(msg);
+                        });
+
+                        res.json(notifications);
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                        res.status(500).send('Error retrieving notifications');
+                    });
             });
 
-            res.json(notifications);
-        })
-        .catch((err) => {
-            console.error(err);
-            res.status(500).send('Error retrieving notifications');
-        });
-});
-
-app.listen(port, () => {
-    console.log(`Server listening at http://localhost:${port}`);
-});
+            server = await new Promise((resolve, reject) => {
+                const server = app.listen(port, () => resolve(server));
+                console.log(`Server listening at http://localhost:${port}`);
+            });
+        },
+        close: async () => {
+            await new Promise((resolve, reject) =>
+                server.close((err) => (err ? reject(err) : resolve()))
+            );
+        },
+    };
+})();

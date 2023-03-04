@@ -1,17 +1,27 @@
-const { Client, ConsumerType } = require('pulsar-client');
+const Pulsar = require('pulsar-client');
 
-const client = new Client({
-    serviceUrl: 'pulsar://localhost:6650',
+process.on('exit', () => {
+    consumer.close();
+    client.close();
 });
 
-const consumer = client.subscribe({
-    topic: 'orders',
-    subscription: 'order_notifications',
-    subscriptionType: ConsumerType.Shared,
-});
+(async () => {
+    // Create a client
+    const client = new Pulsar.Client({
+        serviceUrl: 'pulsar://localhost:6650',
+    });
 
-consumer.on('message', (msg) => {
-    const data = JSON.parse(msg.getData().toString());
-    console.log(`Received order notification: ${JSON.stringify(data)}`);
-    consumer.acknowledge(msg);
-});
+    // Create a consumer
+    const consumer = await client.subscribe({
+        topic: 'orders',
+        subscription: 'order_notifications',
+        subscriptionType: 'shared'
+    });
+
+    // Receive messages
+    while (true) {
+        const msg = await consumer.receive();
+        console.log(msg.getData().toString());
+        consumer.acknowledge(msg);
+    }
+})();

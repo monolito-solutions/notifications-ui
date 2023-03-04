@@ -1,14 +1,14 @@
-const { Client } = require('pulsar-client');
+const Pulsar = require("pulsar-client");
 
-const client = new Client({
-    serviceUrl: 'pulsar://localhost:6650',
-});
+async function produceTest() {
+    const client = new Pulsar.Client({
+        serviceUrl: "pulsar://localhost:6650"
+    });
 
-const producer = client.createProducer({
-    topic: 'orders',
-});
+    const producer = await client.createProducer({
+        topic: 'orders',
+    });
 
-setInterval(() => {
     const order = {
         product: 'example_product',
         amount: Math.round(Math.random() * 10000) / 100,
@@ -16,7 +16,17 @@ setInterval(() => {
 
     console.log(`Sending order notification: ${JSON.stringify(order)}`);
 
-    producer.send({
-        data: JSON.stringify(order),
+    await producer.send({
+        data: Buffer.from(JSON.stringify(order)),
     });
-}, 5000);
+
+    await client.close();
+}
+
+async function run() {
+    for (let i = 0; i < 5; i++) {
+        await produceTest();
+    }
+}
+
+run();
