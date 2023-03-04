@@ -5,7 +5,7 @@ process.on('exit', () => {
     client.close();
 });
 
-(async () => {
+async function getNotifications() {
     // Create a client
     const client = new Pulsar.Client({
         serviceUrl: 'pulsar://localhost:6650',
@@ -24,4 +24,8 @@ process.on('exit', () => {
         console.log(msg.getData().toString());
         consumer.acknowledge(msg);
     }
-})();
+};
+
+getNotifications();
+
+module.exports = getNotifications;
