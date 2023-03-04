@@ -2,9 +2,45 @@
 <html>
 <head>
     <title>Notifications</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+        }
+        h1 {
+            margin: 0;
+        }
+        #notifications {
+            display: flex;
+            flex-direction: column-reverse;
+            gap: 10px;
+            margin: 10px;
+        }
+        .notification {
+            background-color: #f2f2f2;
+            border-radius: 5px;
+            display: flex;
+            padding: 10px;
+        }
+        .notification p {
+            margin: 0;
+        }
+        .notification .time {
+            margin-left: auto;
+            font-size: 0.8em;
+        }
+    </style>
 </head>
 <body>
-    <button onclick="startNotifications()">Start Notifications</button>
+    <header>
+        <h1>Últimas notificaciones recibidas</h1>
+    </header>
     <div id="notifications"></div>
     <script src="index.js"></script>
 </body>
