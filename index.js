@@ -40,8 +40,8 @@ async function getLastNotification() {
 
         // Create a consumer
         consumer = await client.subscribe({
-            topic: 'orders',
-            subscription: 'order_notifications',
+            topic: 'order-events',
+            subscription: 'order-notifications',
             subscriptionType: 'shared'
         });
 

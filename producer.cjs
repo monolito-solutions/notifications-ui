@@ -6,7 +6,7 @@ async function produceTest() {
     });
 
     const producer = await client.createProducer({
-        topic: 'orders',
+        topic: 'order-events',
     });
 
     const order = {

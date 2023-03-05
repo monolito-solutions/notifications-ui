@@ -13,8 +13,8 @@ async function getNotifications() {
 
     // Create a consumer
     const consumer = await client.subscribe({
-        topic: 'orders',
-        subscription: 'order_notifications',
+        topic: 'order-events',
+        subscription: 'order-notifications',
         subscriptionType: 'shared'
     });
 
