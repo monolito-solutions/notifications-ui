@@ -11,7 +11,7 @@ Order notifications UI.
 
 - Run Apache Pulsar
 - Execute `node index.js`.
-- `cd dashboard/index.html` and then `npm start`.
+- `cd dashboard` and then `npm start`.
 - Run `node producer.cjs`.
 
 ## License

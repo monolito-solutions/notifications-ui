@@ -10,7 +10,7 @@ const server = createServer((req, res) => {
     const parsedUrl = url.parse(req.url);
     const pathname = parsedUrl.pathname;
 
-    // User search endpoint
+    // Get orders endpoint
     if (pathname === '/order-notifications' && req.method === 'GET') {
         getLastNotification()
             .then((data) => res.end(JSON.stringify(data)))
