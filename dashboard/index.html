@@ -1,47 +1,83 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Notifications</title>
+    <meta charset="UTF-8" />
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
         }
+
         header {
             background-color: #333;
             color: white;
             padding: 10px;
         }
+
         h1 {
             margin: 0;
         }
+
         #notifications {
             display: flex;
             flex-direction: column-reverse;
             gap: 10px;
             margin: 10px;
         }
+
         .notification {
             background-color: #f2f2f2;
             border-radius: 5px;
             display: flex;
             padding: 10px;
         }
+
         .notification p {
             margin: 0;
         }
+
         .notification .time {
             margin-left: auto;
             font-size: 0.8em;
         }
     </style>
+    <script>
+        // Define a function to fetch the data and create an HTML element
+        async function createNotificationElement() {
+            const response = await fetch(
+                "http://localhost:3000/order-notifications"
+            );
+            const data = await response.json();
+
+            if (data.message != "No message") {
+                // Create a new div element with the notification data
+                const notificationDiv = document.createElement("div");
+                notificationDiv.classList.add("notification");
+                notificationDiv.innerHTML = `
+                        <p>${data}</p>
+                        <span class="time">${new Date().toLocaleString()}</span>
+                    `;
+
+                // Append the new div element to the notifications container
+                const notificationsContainer =
+                    document.getElementById("notifications");
+                notificationsContainer.appendChild(notificationDiv);
+            }
+        }
+
+        // Call the function to create the new HTML element every second
+        setInterval(createNotificationElement, 1000);
+    </script>
 </head>
+
 <body>
     <header>
         <h1>Últimas notificaciones recibidas</h1>
     </header>
     <div id="notifications"></div>
-    <script src="index.js"></script>
 </body>
+
 </html>
