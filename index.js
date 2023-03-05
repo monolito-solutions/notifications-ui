@@ -30,6 +30,16 @@ server.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
 });
 
+function getID(text) {
+    const positionsDeH = [];
+    for (let i = 0; i < text.length; i++) {
+        if (text[i] === "H") {
+            positionsDeH.push(i);
+        }
+    }
+    return text.substring(positionsDeH[2] + 1, positionsDeH[2] + 37);
+}
+
 async function getLastNotification() {
     let client, consumer;
     try {
@@ -47,10 +57,21 @@ async function getLastNotification() {
 
         // Receive message
         const msg = await consumer.receive(1000);
-        const data = msg.getData().toString();
+        const buffer = msg.getData()
+        const data = Buffer.from(buffer, 'utf-8').toString();
+        let response;
         consumer.acknowledge(msg);
-
-        return data;
+        const order_id = getID(data)
+        if (data.includes("EventOrderDispatched")) {
+            response = "Order " + order_id + " has been dispatched."
+        } else if (data.includes("EventInventoryChecked")) {
+            response = "Checking inventory for order " + order_id
+        } else if (data.includes("EventOrderCreated")) {
+            response = "Order " + order_id + " has been created in Entregas de Los Alpes"
+        } else {
+            return data;
+        }
+        return response;
     } catch (err) {
         console.error(err);
         return { message: 'No message' };
