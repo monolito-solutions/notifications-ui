@@ -103,7 +103,7 @@
 <script>
     function searchOrder() {
         const orderId = document.getElementById('order_id').value;
-        fetch(`http://34.72.248.254/?order_id=${orderId}`)
+        fetch(`http://34.72.248.254/orders/?order_id=${orderId}`)
             .then(response => {
                 if (response.ok) {
                     return response.json();
