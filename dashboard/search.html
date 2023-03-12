@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Search Order</title>
+    <meta charset="UTF-8" />
+    <style>
+        .container {
+            width: 80%;
+            padding-top: 2%;
+            margin: auto;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        nav {
+            display: flex;
+            gap: 10px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #333;
+        }
+
+        nav a:hover {
+            background-color: #3b3b3b;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 10px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select {
+            padding: 5px;
+            border-radius: 5px;
+            border-width: 1px;
+            outline: none;
+            font-size: 1em;
+        }
+
+        input[type="button"] {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            outline: none;
+            font-size: 1.2em;
+            background-color: #333;
+            color: white;
+            cursor: pointer;
+        }
+
+        input[type="button"]:hover {
+            background-color: #3b3b3b;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Search Order</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/create">Create</a>
+            <a href="/search">Search order</a>
+        </nav>
+    </header>
+    <div class="container">
+        <form method="GET" action="">
+            <label for="order_id">Order ID:</label>
+            <input type="text" id="order_id" name="order_id" required>
+            <input type="button" value="Search Order" onclick="searchOrder()">
+        </form>
+        <div id="message" style="padding-top: 10px;"></div>
+    </div>
+</body>
+<script>
+    function searchOrder() {
+        const orderId = document.getElementById('order_id').value;
+        fetch(`http://localhost:9009/?order_id=${orderId}`)
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Error: Unable to retrieve order');
+            })
+            .then(data => {
+                displayMessage(data.message, 'success');
+            })
+            .catch(error => {
+                displayMessage(error.message, 'error');
+            });
+    }
+
+    function displayMessage(message, type) {
+        const messageElement = document.getElementById('message');
+        messageElement.innerHTML = message;
+        messageElement.classList.add(type);
+        messageElement.style.display = 'block';
+    }
+</script>
+
+</html>
