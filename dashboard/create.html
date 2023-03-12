@@ -65,7 +65,7 @@
             font-size: 1em;
         }
 
-        input[type="submit"] {
+        button {
             padding: 10px;
             border-radius: 5px;
             border: none;
@@ -76,7 +76,7 @@
             cursor: pointer;
         }
 
-        input[type="submit"]:hover {
+        button:hover {
             background-color: #3b3b3b;
         }
     </style>
@@ -92,29 +92,50 @@
         </nav>
     </header>
     <div class="container">
-        <form method="POST" action="http://34.72.248.254/orders/">
-            <label for="order_id">Order ID:</label>
-            <input type="text" id="order_id" name="order_id" required>
+        <form>
             <label for="customer_id">Customer ID:</label>
-            <input type="text" id="customer_id" name="customer_id" required>
+            <input type="text" id="customer_id" name="customer_id" required />
             <label for="order_date">Order Date:</label>
-            <input type="date" id="order_date" name="order_date" required>
-            <label for="order_status">Order Status:</label>
-            <select id="order_status" name="order_status" required>
-                <option value="pending">Pending</option>
-                <option value="processing">Processing</option>
-                <option value="shipped">Shipped</option>
-                <option value="delivered">Delivered</option>
-            </select>
+            <input type="date" id="order_date" name="order_date" required />
             <label for="order_items">Order Items:</label>
             <textarea id="order_items" name="order_items" required></textarea>
             <label for="order_total">Order Total:</label>
-            <input type="number" id="order_total" name="order_total" step="0.01" required>
+            <input type="number" id="order_total" name="order_total" step="0.01" required />
             <label for="order_version">Order Version:</label>
-            <input type="number" id="order_version" name="order_version" required>
-            <input type="submit" value="Create Order">
+            <input type="number" id="order_version" name="order_version" required />
+            <button onclick="createOrder()">Create Order</button>
         </form>
     </div>
+
+    <script>
+        function createOrder() {
+            const form = document.querySelector("form");
+            const order = {
+                customer_id: form.elements.customer_id.value,
+                order_date: form.elements.order_date.value,
+                order_status: 'created',
+                order_items: form.elements.order_items.value,
+                order_total: form.elements.order_total.value,
+                order_version: form.elements.order_version.value
+            };
+
+            fetch("http://34.72.248.254/orders/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(order)
+            })
+                .then(response => {
+                    console.log(response);
+                    alert("Order created successfully!");
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert("Error creating order!");
+                });
+        }
+    </script>
 </body>
 
 </html>
