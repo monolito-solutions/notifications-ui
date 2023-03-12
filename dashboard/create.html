@@ -98,7 +98,11 @@
             <label for="order_date">Order Date:</label>
             <input type="date" id="order_date" name="order_date" required />
             <label for="order_items">Order Items:</label>
-            <textarea id="order_items" name="order_items" required></textarea>
+            <select id="order_items" name="order_items" required>
+                <option value="0">Item existente</option>
+                <option value="1" selected>Item no suficientes</option>
+                <option value="2">Item no existente</option>
+            </select>
             <label for="order_total">Order Total:</label>
             <input type="number" id="order_total" name="order_total" step="0.01" required />
             <button onclick="createOrder()">Create Order</button>
