@@ -15,10 +15,30 @@
             background-color: #333;
             color: white;
             padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         h1 {
             margin: 0;
+        }
+
+        nav {
+            display: flex;
+            gap: 10px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #333;
+        }
+
+        nav a:hover {
+            background-color: #3b3b3b;
         }
 
         #notifications {
@@ -76,6 +96,11 @@
 <body>
     <header>
         <h1>Últimas notificaciones recibidas</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/create">Create</a>
+            <a href="/search">Search order</a>
+        </nav>
     </header>
     <div id="notifications"></div>
 </body>
