@@ -101,8 +101,6 @@
             <textarea id="order_items" name="order_items" required></textarea>
             <label for="order_total">Order Total:</label>
             <input type="number" id="order_total" name="order_total" step="0.01" required />
-            <label for="order_version">Order Version:</label>
-            <input type="number" id="order_version" name="order_version" required />
             <button onclick="createOrder()">Create Order</button>
         </form>
     </div>
@@ -114,9 +112,9 @@
                 customer_id: form.elements.customer_id.value,
                 order_date: form.elements.order_date.value,
                 order_status: 'created',
-                order_items: form.elements.order_items.value,
+                order_items: JSON.stringify(form.elements.order_items.value),
                 order_total: form.elements.order_total.value,
-                order_version: form.elements.order_version.value
+                order_version: '2'
             };
 
             fetch("http://34.72.248.254/orders/", {
